@@ -4,7 +4,13 @@ from flask import Flask, request
 
 import urllib.request, urllib.parse
 import subprocess
+import sys
 import pprint
+
+import logging
+from logging.handlers import RotatingFileHandler
+
+show_command="show_news"
 
 app = Flask(__name__)
 
@@ -34,7 +40,7 @@ def get_news():
           
             #run(>=3.5)
         res = subprocess.call(["sudo", "killall", "demo"])
-        res = subprocess.call(["NEWS", str])
+        res = subprocess.call([show_command, str])
         print (res)
 	
 #    pp.pprint( "body: {0}".format(request.data ))
@@ -46,7 +52,16 @@ def reset_news():
     return "reset"
 
 
+@app.route('/quit')
+def quit():
+    app.logger.debug('debug message')
+    app.terminate()
+
+
 if __name__ == '__main__':
+    handler = RotatingFileHandler('foo.log', maxBytes=10000, backupCount=1)
+    handler.setLevel(logging.INFO)
+    app.logger.addHandler(handler)
     app.run(host="192.168.207.42", port=5000)
 
 
