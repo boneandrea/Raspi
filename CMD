@@ -1,0 +1,36 @@
+  777  2017-06-11 22:14  sudo pip install virtualenv
+  792  2017-06-11 22:18  which python3
+  793  2017-06-11 22:18  virtualenv -p /usr/bin/python3  moke
+  794  2017-06-11 22:18  . moke/bin
+  795  2017-06-11 22:18  . moke/bin/activate
+  796  2017-06-11 22:18  ls
+  797  2017-06-11 22:19  python
+  798  2017-06-11 22:19  deactivate
+  799  2017-06-11 22:19  . moke/bin/activate
+  800  2017-06-11 22:19  exit
+  801  2017-06-11 22:19  moke/bin/activate
+  802  2017-06-11 22:19  . moke/bin/activate
+  803  2017-06-11 22:19  deactivate
+  804  2017-06-11 22:19  python -v
+  805  2017-06-11 22:19  python -V
+  806  2017-06-11 22:19  . moke/bin/activate
+  807  2017-06-11 22:19  python -V
+  808  2017-06-11 22:20  deactivate
+  809  2017-06-11 22:20  cd moke
+  810  2017-06-11 22:20  ls
+
+
+
+  812  2017-06-11 22:20  . moke/bin/activate
+  811  2017-06-11 22:20  pip install wand
+  813  2017-06-11 22:20  deactivate
+  812  2017-06-11 22:20  . moke/bin/activate
+
+
+  834  2017-06-11 22:28  pip install Flask
+  835  2017-06-11 22:32  mkdir work/LEDMatrixServer
+  836  2017-06-11 22:32  cd work/LEDMatrixServer
+  881  2017-06-11 22:49  sudo pip install virtualenv
+  883  2017-06-11 22:49  vi srv.py
+  882  2017-06-11 22:49  python srv.py
+
