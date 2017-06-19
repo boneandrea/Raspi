@@ -1,2 +1,10 @@
-python srv.py
+set -x
+echo `dirname $0`
 
+cd ~
+
+. moke/bin/activate 
+
+cd `dirname $0`
+python srv.py > /dev/null 2>&1 &
+#FLASK_DEBUG=1 python srv.py  

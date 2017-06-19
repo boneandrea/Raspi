@@ -4,11 +4,13 @@ from flask import Flask, request
 
 import urllib.request, urllib.parse
 import subprocess
+import time
 import sys
 import pprint
 
-import logging
-from logging.handlers import RotatingFileHandler
+import os
+import logging # log
+from logging.handlers import RotatingFileHandler #log
 
 show_command="show_news"
 
@@ -54,14 +56,38 @@ def reset_news():
 
 @app.route('/quit')
 def quit():
-    app.logger.debug('debug message')
-    app.terminate()
+    app.logger.info("QUIT..抜けられない")
+    return "quit"
+#    app.terminate()
+
+
+def not_exist_makedirs(path):
+    if not os.path.exists(path):
+        os.makedirs(path)
 
 
 if __name__ == '__main__':
-    handler = RotatingFileHandler('foo.log', maxBytes=10000, backupCount=1)
-    handler.setLevel(logging.INFO)
-    app.logger.addHandler(handler)
+
+    debug_log = os.path.join(app.root_path, './logs/debug.log')
+    not_exist_makedirs(os.path.dirname(debug_log))
+    formatter = logging.Formatter(
+        '%(asctime)s %(levelname)s: %(message)s '
+        '[in %(pathname)s:%(lineno)d]'
+    )
+       
+    debug_file_handler = RotatingFileHandler(
+        debug_log, maxBytes=100000, backupCount=10
+    )
+    
+    debug_file_handler.setLevel(logging.INFO)
+#    debug_file_handler.setFormatter(formatter)
+    app.logger.addHandler(debug_file_handler)
+
+
+    # handler = RotatingFileHandler('foo.log', maxBytes=10000, backupCount=1) # log
+    # handler.setLevel(logging.DEBUG) # log
+    # app.logger.addHandler(handler) # log
+
     app.run(host="192.168.207.42", port=5000)
 
 
