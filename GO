@@ -6,5 +6,7 @@ cd ~
 . moke/bin/activate 
 
 cd `dirname $0`
-python srv.py > /dev/null 2>&1 &
-#FLASK_DEBUG=1 python srv.py  
+python srv.py > /dev/null &
+
+
+
