@@ -15,7 +15,7 @@ from logging.handlers import RotatingFileHandler #log
 show_command="/home/pi/bin/show_news"
 
 app = Flask(__name__)
-#app.debug=True
+app.debug=True
 
 @app.route('/')
 def hello_world():
@@ -40,7 +40,6 @@ def get_news():
         data_encoded = urllib.parse.urlencode(data).encode("utf-8")
         with urllib.request.urlopen("http://192.168.207.42/voice/voice_data.php", data=data_encoded) as res:
             html = res.read().decode("utf-8")
-#            print(html)
 
           
             #run(>=3.5)
@@ -61,11 +60,12 @@ def reset_news():
 
 @app.route('/quit')
 def quit():
-    app.logger.info("QUIT..抜けられない")
+    app.logger.info("QUIT..")
     func = request.environ.get('werkzeug.server.shutdown')
     if func is None:
         raise RuntimeError('Not running with the Werkzeug Server')
     func()
+    sys.exit(0)
     return "quit"
 
 

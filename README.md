@@ -1,5 +1,5 @@
-# Raspi
-ラズパイ上で動かすもの
+# 電光掲示板
+ラズパイ上で動かす
 
 # What
 - httpで受け取ったメッセージを電光掲示板に表示する
@@ -8,3 +8,9 @@
 
 # How
 - 電光掲示板に表示するのは外部プログラム(show_news)
+
+
+# 参考情報
+というか全部これ  
+https://github.com/hzeller/rpi-rgb-led-matrix
+
