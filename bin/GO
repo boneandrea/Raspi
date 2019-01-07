@@ -1,0 +1,26 @@
+#!/bin/bash
+
+MYDIR=$(cd $(dirname $0) && pwd) 
+cd $MYDIR
+
+
+BASESPEED=10 # 最低こんだけ
+MAXPLUSSPEED=20 #最大のプラス分 (最大の時最も遅くなる)
+
+IMAGE=$1
+
+SPD=$(( $BASESPEED + $RANDOM % $MAXPLUSSPEED ))
+OPTION="--led-rows=16"
+OPTION="--led-rows=32 --led-cols=64"
+
+# -m 少ないと速い
+sudo ./demo -D 1 -b 40 \
+  $OPTION \
+	-m $SPD \
+	--led-chain=2 \
+	--led-daemon \
+	--led-no-hardware-pulse \
+	$IMAGE
+
+#fe.ppm
+#runtext16.ppm

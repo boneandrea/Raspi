@@ -11,8 +11,8 @@ import os
 import logging  # log
 from logging.handlers import RotatingFileHandler  # log
 
-show_command = "/home/pi/bin/show_news"
-show_direct_command = "/home/pi/work/LEDMatrix/rpi-rgb-led-matrix/examples-api-use/GO"
+SHOW_COMMAND = "bin/show_news"
+show_direct_command = "bin/GO"
 
 app = Flask(__name__)
 app.debug = True
@@ -65,7 +65,7 @@ def get_news():
 
             # run(>=3.5)
         res = subprocess.call(["sudo", "killall", "demo"])
-        res = subprocess.call([show_command, str])
+        res = subprocess.call([SHOW_COMMAND, str])
         app.logger.info(res)
 
     return jsonify({"result": True})

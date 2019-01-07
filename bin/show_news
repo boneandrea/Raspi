@@ -1,0 +1,14 @@
+#!/bin/bash
+
+set -eu
+
+MYDIR=$(cd $(dirname $0) && pwd)
+cd $MYDIR
+
+IMG=img/news.ppm
+HEIGHT=`cat height`
+
+date >| log
+
+./MAKESTR -m "$1" -o $IMG -h $HEIGHT >> log 2>&1
+./GO $IMG
