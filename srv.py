@@ -29,11 +29,13 @@ def hello_world_ja():
     return 'こんにちは 世界！'
 
 
+# 画像を受け取って表示する
 @app.route('/image', methods=['POST'])
 def get_image():
     app.logger.info("upload file")
     # https://qiita.com/5zm/items/ac8c9d1d74d012e682b4
     file = request.files['file']
+    app.logger.info(file)
     fileName = file.filename
     if fileName == "":
         make_response(jsonify({'result': 'filename must not empty.'}))

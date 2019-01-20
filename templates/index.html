@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8" />
+    <title>
+    </title>
+    <style type="text/css">
+    </style>
+    <link rel="stylesheet" type="text/css" href="" media="all" />
+    <link rel="stylesheet" type="text/css" href="" media="print" />
+    <link rel="stylesheet" type="text/css" href="" media="screen" />
+    <link rel="stylesheet" type="text/css" href="" media="all" />
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet">
+  </head>
+  <body>
+    <div class="container">
+      <h1>
+        Hello!{{message}}
+      </h1>
+      <form method="post">
+        <div class="form-group">
+          <textarea name="" placeholder="" class="form-control"></textarea>
+        </div>
+        <div class="form-group">
+          <input name="" placeholder="" class="form-control" />
+        </div>
+        <div class="form-group">
+          <input type="submit" value="送信" class="btn">
+          <input type="reset" value="クリア" class="btn">
+        </div>
+      </form>
+      <hr>
+      <form method="post">
+        <div class="form-group">
+          <input type="submit" value="hello" class="center btn btn-warning" >
+          <input type="hidden" name="reset" value="1" />
+        </div>
+      </form>
+      <form method="post" action="/image" enctype="multipart/form-data">
+        <div class="input-group">
+          <label class="input-group-btn">
+            <span class="btn btn-primary">
+              Choose File
+              <input type="file" name="file" style="display:none">
+            </span>
+          </label>
+          <input type="text" class="form-control" readonly="">
+        </div>
+        <input type="submit" value="GO!" class="center btn btn-warning" >
+      </form>
+      <hr>
+      <a href="/quit">
+        <div class="form-group">
+          <input type="button" value="quit" class="center btn btn-danger" >
+        </div>
+      </a>
+    </div>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script>
+     $(document).on('change', ':file', function() {
+         var input = $(this),
+             numFiles = input.get(0).files ? input.get(0).files.length : 1,
+             label = input.val().replace(/\\/g, '/').replace(/.*\//, '');
+         input.parent().parent().next(':text').val(label);
+     });
+    </script>
+  </body>
+</html>
