@@ -5,11 +5,13 @@ import urllib.parse
 import subprocess
 import time
 import sys
-
 import pprint
 import os
+
 import logging  # log
 from logging.handlers import RotatingFileHandler  # log
+
+import draw_image
 
 SHOW_COMMAND = "bin/show_news"
 show_direct_command = "bin/GO"
@@ -59,18 +61,44 @@ def get_news():
 
         app.logger.info(str)
 
-        data = {"message": "えっ　なんだって？"}
-        # ここでエンコードして文字 => バイトにする！
-        data_encoded = urllib.parse.urlencode(data).encode("utf-8")
-        with urllib.request.urlopen("http://192.168.207.42/voice/voice_data.php", data=data_encoded) as res:
-            html = res.read().decode("utf-8")
+        post_voice({"message": "えっ　なんだって？"})
 
-            # run(>=3.5)
+        # run(>=3.5)
         res = subprocess.call(["sudo", "killall", "demo"])
-        res = subprocess.call([SHOW_COMMAND, str])
-        app.logger.info(res)
+
+        # draw image
+        if draw(str):
+            # run demo if success
+            res = subprocess.call([SHOW_COMMAND, str])
+            app.logger.info(res)
 
     return jsonify({"result": True})
+
+
+def draw(message):
+    try:
+        draw_image.create([{
+            "char": message,
+            "size": "full",
+            "color": "#55aaff",
+            "background": "#004411"
+        }],
+            outputFile="bin/img/news",
+            height=32
+        )
+        return True
+    except Exception as e:
+        raise e
+        return False
+
+        pass
+
+
+def post_voice(voice_data):
+    # ここでエンコードして文字 => バイトにする！
+    voice_data_encoded = urllib.parse.urlencode(voice_data).encode("utf-8")
+    with urllib.request.urlopen("http://192.168.207.42/voice/voice_data.php", data=voice_data_encoded) as res:
+        html = res.read().decode("utf-8")
 
 
 @app.route('/reset')
