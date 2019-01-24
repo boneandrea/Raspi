@@ -59,14 +59,14 @@ def full_chars(charData):
 
     width = get_width(charData)
     text_canvas = Image.new(
-        'RGB', (width, HEIGHT), ImageColor.getrgb(charData["background"]))
+        'RGB', (width, HEIGHT), random_color(10))
 
     draw = ImageDraw.Draw(text_canvas)
     draw.text(
         (0, 0),
-        charData["char"],
+        charData["char"].strip(),
         font=pick_font(),
-        fill=ImageColor.getrgb(charData["color"])
+        fill=random_color(-10)
     )
 
     # 半角に
@@ -77,7 +77,7 @@ def half_chars(charData):
 
     width = get_width(charData)
     text_canvas = Image.new('RGB', (width*2, HEIGHT),
-                            ImageColor.getrgb(charData["background"]))
+                            charData["background"])
 
     draw = ImageDraw.Draw(text_canvas)
     draw.text((0, 0), charData["char"], font=font(),
@@ -85,6 +85,13 @@ def half_chars(charData):
 
     # 半角に
     return text_canvas.resize((width, HEIGHT))
+
+
+def random_color(max=max):
+    if max > 0:
+        return (random.randint(1, max), random.randint(1, max), random.randint(1, max))
+    else:
+        return (random.randint(255+max, 255), random.randint(255+max, 255), random.randint(255+max, 255))
 
 
 def create(msgArray=[],
@@ -96,14 +103,14 @@ def create(msgArray=[],
     print(all_width_height)
     canvas = Image.new('RGB',
                        all_width_height,
-                       BLACK)
+                       random_color(5))
     draw = ImageDraw.Draw(canvas)
 
     left_offset = 0
     for m in msgArray:
 
         if "background" not in m.keys():
-            m["background"] = BLACK  # default value
+            m["background"] = random_color(10)
 
         if m["size"] == "full":
             full_image = full_chars(m)
