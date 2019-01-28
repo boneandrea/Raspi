@@ -118,12 +118,19 @@ def draw(message):
 
         pass
 
+
+def mytrigger():
+    print("trigger")
+    pass
+
 if __name__ == '__main__':
 
     init("test.db")
 
     text = "Hello"
     perform({"text": text})
+
+    conn.set_trace_callback(mytrigger)
 
     # while True:
     #     print(".")
