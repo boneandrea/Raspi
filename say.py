@@ -35,7 +35,9 @@ def init(dbname=None):
     conn.row_factory = dict_factory
 #    conn.row_factory = sqlite3.Row
 
-    logger.info("init")
+    if logger != None:
+        logger.info("init")
+
     return DBNAME
 
 
