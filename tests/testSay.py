@@ -3,6 +3,7 @@ import unittest
 import subprocess
 import sys
 import os
+from unittest.mock import patch, MagicMock, call
 
 
 DB_PROGRAM = "sqlite3"
@@ -33,3 +34,18 @@ class TestSay(unittest.TestCase):
         data = say.enqueue(title="TITLE", text="テキスト")
         self.assertEqual("テキスト", data["text"])
         self.assertIsNotNone(data)
+        say.dequeue()
+
+    # def test_1action(self):
+    #     mock_lib = MagicMock()
+    #     with patch('say', return_value=mock_lib):
+    #         say.enqueue()
+    #         say.enqueue(title="TITLE", text="テキスト")
+
+    #     assert mock_lib.perfome.called is True
+
+    #     assert True is True
+#        assert mock_lib.enqueue.called is True
+        # say.enqueue(title="TITLE", text="テキスト")
+        # say.dequeue()
+        # self.assertIsNotNone(data)
