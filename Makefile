@@ -4,3 +4,6 @@ all:
 	echo "make test"
 test:
 	python -m unittest discover -s tests -v
+
+testone:
+	python -m unittest tests.testSay.TestSay.test_dequeue -v

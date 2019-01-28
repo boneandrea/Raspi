@@ -36,7 +36,7 @@ HEIGHT = 32
 
 def get_width(charData):
     HEIGHT = 32
-    print(HEIGHT if charData["size"] == "full" else HEIGHT / 2)
+#    print(HEIGHT if charData["size"] == "full" else HEIGHT / 2)
     return len(charData["char"] + SPACE) * (HEIGHT if charData["size"] == "full" else HEIGHT / 2)
 
 
@@ -99,8 +99,6 @@ def create(msgArray=[],
            height=32):
     HEIGHT = height
     all_width_height = (get_all_width(msgArray), height)
-    print(HEIGHT)
-    print(all_width_height)
     canvas = Image.new('RGB',
                        all_width_height,
                        random_color(5))
