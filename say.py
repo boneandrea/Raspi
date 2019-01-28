@@ -10,13 +10,19 @@ import sqlite3
 import subprocess
 import datetime
 import draw_image
-
+import time
+import sys
+import os
+import logging  # log
+import logging.config
+# from logging.handlers import RotatingFileHandler  # log
 
 DBNAME = None
 conn = None
 CMD = "/home/pi/work/aquestalkpi/AquesTalkPi"
 APLAY = "/usr/bin/aplay"
 SHOW_COMMAND = "bin/show_news"
+logger = None
 
 
 def init(dbname=None):
@@ -29,6 +35,7 @@ def init(dbname=None):
     conn.row_factory = dict_factory
 #    conn.row_factory = sqlite3.Row
 
+    logger.info("init")
     return DBNAME
 
 
@@ -46,7 +53,8 @@ def say(row):
     if msg is not None:
         print("RUN")
         print([CMD, "-s", str(speed), msg])
-        res = subprocess.run([CMD, "-s", str(speed), msg], stdout=subprocess.PIPE)
+        res = subprocess.run([CMD, "-s", str(speed), msg],
+                             stdout=subprocess.PIPE)
         wav = res.stdout
         p = subprocess.Popen([APLAY], stdin=subprocess.PIPE)
         p.communicate(wav)
@@ -60,6 +68,7 @@ def dequeue():
     for row in c.execute('select * from entries'):
         perform(row)
 
+    logger.info("{} records dequeued".format(len(entries)))
     return entries
 
 
@@ -91,7 +100,8 @@ def enqueue(title, text):
         stmt = "insert into entries (title, text, created) values (?,?,?)"
         c.execute(stmt, (title, text, datetime.datetime.now()))
         conn.commit()
-        elem = c.execute('select * from entries where ROWID = last_insert_rowid()')
+        elem = c.execute(
+            'select * from entries where ROWID = last_insert_rowid()')
         return(elem.fetchone())
 
     except sqlite3.Error as e:
@@ -123,15 +133,24 @@ def mytrigger():
     print("trigger")
     pass
 
+
+def init_log():
+    global logger
+    logging.config.fileConfig('logging.conf')
+    logger = logging.getLogger()
+
+
 if __name__ == '__main__':
 
+    init_log()
     init("test.db")
+    logging.info("start")
 
     text = "Hello"
     perform({"text": text})
 
     conn.set_trace_callback(mytrigger)
 
-    # while True:
-    #     print(".")
-    #     dequeue()
+    while True:
+        dequeue()
+        time.sleep(3)
