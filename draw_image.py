@@ -36,8 +36,8 @@ HEIGHT = 32
 
 def get_width(charData):
     HEIGHT = 32
-    print(HEIGHT if charData["size"] == "full" else HEIGHT/2)
-    return len(charData["char"]+SPACE) * (HEIGHT if charData["size"] == "full" else HEIGHT/2)
+    print(HEIGHT if charData["size"] == "full" else HEIGHT / 2)
+    return len(charData["char"] + SPACE) * (HEIGHT if charData["size"] == "full" else HEIGHT / 2)
 
 
 def get_all_width(charDataList=[]):
@@ -76,7 +76,7 @@ def full_chars(charData):
 def half_chars(charData):
 
     width = get_width(charData)
-    text_canvas = Image.new('RGB', (width*2, HEIGHT),
+    text_canvas = Image.new('RGB', (width * 2, HEIGHT),
                             charData["background"])
 
     draw = ImageDraw.Draw(text_canvas)
@@ -91,7 +91,7 @@ def random_color(max=max):
     if max > 0:
         return (random.randint(1, max), random.randint(1, max), random.randint(1, max))
     else:
-        return (random.randint(255+max, 255), random.randint(255+max, 255), random.randint(255+max, 255))
+        return (random.randint(255 + max, 255), random.randint(255 + max, 255), random.randint(255 + max, 255))
 
 
 def create(msgArray=[],
@@ -127,10 +127,11 @@ def create(msgArray=[],
     global ppmfile
     # 保存
     try:
-        canvas.save(outputFile+".ppm", 'PPM', quality=100, optimize=True)
-        canvas.save(outputFile+".jpg", 'JPEG', quality=100, optimize=True)
-        ppmfile = outputFile+".ppm"
-        return open(outputFile+".ppm", "rb").read()
+        canvas.save(outputFile + ".ppm", 'PPM', quality=100, optimize=True)
+        canvas.save(outputFile + ".jpg", 'JPEG', quality=100, optimize=True)
+        ppmfile = outputFile + ".ppm"
+        with open(outputFile + ".ppm", "rb") as f:
+            return f.read()
 
     except Exception as e:
         raise e

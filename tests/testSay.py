@@ -36,6 +36,12 @@ class TestSay(unittest.TestCase):
         self.assertIsNotNone(data)
         say.dequeue()
 
+    def test_led_message(self):
+
+        self.assertTrue(say.led_message({"text": "my_text"}))
+        with self.assertRaises(KeyError):
+            self.assertRaises(KeyError, say.led_message({}))
+
     # def test_1action(self):
     #     mock_lib = MagicMock()
     #     with patch('say', return_value=mock_lib):

@@ -3,16 +3,20 @@
 # - parse data
 # - call say
 # - call LED
+# 本番DBを設定して、ループ開始する(.envで判定？)
+
 
 import sqlite3
 import subprocess
 import datetime
+import draw_image
 
 
 DBNAME = None
 conn = None
 CMD = "/home/pi/work/aquestalkpi/AquesTalkPi"
 APLAY = "/usr/bin/aplay"
+SHOW_COMMAND = "bin/show_news"
 
 
 def init(dbname=None):
@@ -48,12 +52,6 @@ def say(row):
         p.communicate(wav)
 
 
-def fuga():
-    #    res = subprocess.call(["ls", "killall", "demo"])
-    res = subprocess.call(["./a"])  # synchronized
-    print(res)
-
-
 def dequeue():
 
     c = conn.cursor()
@@ -67,15 +65,24 @@ def dequeue():
 
 def perform(dict_row):
     if True:
+        led_message(dict_row)
+
+    if True:
         say(dict_row)
-    pass
 
 
-def post_voice(voice_data):
-    # ここでエンコードして文字 => バイトにする！
-    voice_data_encoded = urllib.parse.urlencode(voice_data).encode("utf-8")
-    with urllib.request.urlopen("http://192.168.207.42/voice/src/voice_data.php", data=voice_data_encoded) as res:
-        html = res.read().decode("utf-8")
+def led_message(row):
+    try:
+        if draw(row["text"]):
+            # run demo if success
+            res = subprocess.run([SHOW_COMMAND, row["text"]])
+            print(res)
+            return True
+        else:
+            return False
+
+    except KeyError as e:
+        raise
 
 
 def enqueue(title, text):
@@ -92,7 +99,32 @@ def enqueue(title, text):
         raise e
 
 
+def draw(message):
+    try:
+        res = subprocess.run(["sudo", "killall", "demo"])
+        draw_image.create([{
+            "char": message,
+            "size": "full",
+            "color": "#55aaff",
+            "background": "#004411"
+        }],
+            outputFile="bin/img/news",
+            height=32
+        )
+        return True
+    except Exception as e:
+        raise e
+        return False
+
+        pass
+
 if __name__ == '__main__':
 
-    print(init("test.db"))
-    fuga()
+    init("test.db")
+
+    text = "Hello"
+    perform({"text": text})
+
+    # while True:
+    #     print(".")
+    #     dequeue()
