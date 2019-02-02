@@ -14,3 +14,13 @@
 というか全部これ  
 https://github.com/hzeller/rpi-rgb-led-matrix
 
+
+
+# 改造
+- dequeue -> delete
+- パラメータ詳細
+  - 声ONOFF
+  - 声その他params
+  - 文字ONOFF
+  - 文字その他params
+

@@ -15,11 +15,11 @@ import sys
 import os
 import logging  # log
 import logging.config
+import mock
+import performer
+
 # from logging.handlers import RotatingFileHandler  # log
 
-CMD = "/home/pi/work/aquestalkpi/AquesTalkPi"
-APLAY = "/usr/bin/aplay"
-SHOW_COMMAND = "bin/show_news"
 logger = None
 
 
@@ -30,7 +30,7 @@ def dict_factory(cursor, row):
     return d
 
 
-class Perform():
+class Popper():
 
     conn = None
     DBNAME = None
@@ -59,17 +59,6 @@ class Perform():
             logger.removeHandler(h)
         self.conn.close()
 
-    def say(row):
-        speed = 100
-        msg = row["text"]
-
-        if msg is not None:
-            res = subprocess.run([CMD, "-s", str(speed), msg],
-                                 stdout=subprocess.PIPE)
-            wav = res.stdout
-            p = subprocess.Popen([APLAY], stdin=subprocess.PIPE)
-            p.communicate(wav)
-
     def dequeue(self):
         c = self.conn.cursor()
         c.execute('select * from entries')
@@ -80,29 +69,6 @@ class Perform():
             c.execute('delete from entries where id=%s' % row["id"])
 
         return entries
-
-    def my_perform(self, dict_row):
-        if False:
-            led_message(dict_row)
-
-        if False:
-            say(dict_row)
-
-        return True
-
-    def led_message(self, row):
-        try:
-            if self.draw(row["text"]):
-                print("fe")
-                # run demo if success
-                res = subprocess.run([SHOW_COMMAND, row["text"]])
-                return True
-            else:
-                return False
-
-        except KeyError as e:
-            raise
-
     def enqueue(self, title, text):
         try:
             c = self.conn.cursor()
@@ -117,26 +83,20 @@ class Perform():
             print("An error occurred:", e.args[0])
             raise e
 
-    def draw(self, message):
-        try:
-            res = subprocess.run(["sudo", "killall", "demo"])
-            draw_image.create([{
-                "char": message,
-                "size": "full",
-                "color": "#55aaff",
-                "background": "#004411"
-            }],
-                outputFile="bin/img/news",
-                height=32
-            )
-            return True
-        except Exception as e:
-            print(e)
-            raise e
+    def my_perform(self, dict_row):
+        p=performer.Performer()
 
-        return False
+        if dict_row["voice"] == True:
+            p.led_message(dict_row)
+
+        if dict_row["led"] == True:
+            p.say(dict_row)
+
+        return True
 
     def mytrigger(self):
+        mocked=mock.MyMock()
+        mocked.hello()
         return self.dequeue()
 
     def main_loop(self):
@@ -149,7 +109,7 @@ class Perform():
 
 if __name__ == '__main__':
 
-    p = Perform()
+    p = Popper()
     p.init_log()
     p.init("test.db")
     logging.info("start")

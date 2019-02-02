@@ -1,4 +1,4 @@
-import perform
+import popper
 import unittest
 import subprocess
 import sqlite3
@@ -15,8 +15,8 @@ class TestSay(unittest.TestCase):
     conn = None
 
     def setUp(self):
-        self._initDb()
-        self.app = perform.Perform()
+        self.conn=self._initDb()
+        self.app = popper.Popper()
         self.app.init(TEST_DB)
         self.app.init_log()
 
@@ -29,9 +29,12 @@ class TestSay(unittest.TestCase):
         with open(DB_SCHEMA, "r") as f:
             data = f.read()
             p.communicate(data.encode())
-        self.conn = sqlite3.connect(TEST_DB)
-        pass
-    #####
+        return sqlite3.connect(TEST_DB)
+
+    #################### </helper>
+
+    def test_init(self):
+        assert self.conn is not None
 
     def test_dequeue(self):
         # test to decrease by 1
@@ -46,24 +49,27 @@ class TestSay(unittest.TestCase):
         self.assertEqual("テキスト", data["text"])
         self.assertIsNotNone(data)
 
-    def test_led_message(self):
-        self.assertTrue(self.app.led_message({"text": "my_text"}))
-
-        with self.assertRaises(KeyError):  # 例外のテスト
-            self.assertRaises(KeyError, self.app.led_message(
-                {"text_not_exist": "my_text"}))
-
-    def test_my_perform(self):
-        self.assertTrue(self.app.my_perform({"text": "my_text"}))
-
     def test_mytrigger(self):
         self.assertTrue(type(self.app.mytrigger()) is list)
 
-    def test_1action(self):
+    def test_mock_action(self):
         mock_lib = MagicMock()
-        with patch('Perform', return_value=mock_lib):
-            Perform.mytrigger()
-            assert mock_lib.dequeue.called is True
+        with patch('mock.MyMock', return_value=mock_lib):
+            self.app.mytrigger()
+            assert mock_lib.hello.called is True
+
+    def test_perform(self):
+        mock_lib = MagicMock()
+        with patch('performer.Performer', return_value=mock_lib):
+            self.app.my_perform({
+                "text": "my_text",
+                "voice": True,
+                "led": True
+                })
+            assert mock_lib.led_message.called is True
+            assert mock_lib.say.called is True
+
+
             # perform.enqueue(title="TITLE", text="テキスト")
 
     #     assert True is True
