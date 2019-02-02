@@ -12,13 +12,14 @@ import logging  # log
 from logging.handlers import RotatingFileHandler  # log
 
 import draw_image
+from popper import Popper
 
 SHOW_COMMAND = "bin/show_news"
 show_direct_command = "bin/GO"
 
 app = Flask(__name__)
 app.debug = True
-
+p=None
 
 @app.route('/')
 def hello_world():
@@ -60,17 +61,11 @@ def get_news():
         str = request.form["str"]
 
         app.logger.info(str)
-
-        post_voice({"message": "えっ　なんだって？"})
-
-        # run(>=3.5)
-        res = subprocess.call(["sudo", "killall", "demo"])
-
-        # draw image
-        if draw(str):
-            # run demo if success
-            res = subprocess.call([SHOW_COMMAND, str])
-            app.logger.info(res)
+        logging.info("start")
+        p = Popper()
+        p.init_log()
+        p.init("test.db")
+        p.enqueue("title", text=str)
 
     return jsonify({"result": True})
 
@@ -97,7 +92,7 @@ def draw(message):
 def post_voice(voice_data):
     # ここでエンコードして文字 => バイトにする！
     voice_data_encoded = urllib.parse.urlencode(voice_data).encode("utf-8")
-    with urllib.request.urlopen("http://192.168.207.42/voice/voice_data.php", data=voice_data_encoded) as res:
+    with urllib.request.urlopen("http://192.168.207.42/voice/src/voice_data.php", data=voice_data_encoded) as res:
         html = res.read().decode("utf-8")
 
 
@@ -107,8 +102,12 @@ def reset_news():
     return "reset"
 
 
+def enqueue(title, text):
+    pass
+
 # 終了
 # https://stackoverflow.com/questions/15562446/how-to-stop-flask-application-without-using-ctrl-c
+
 
 @app.route('/quit')
 def quit():
@@ -120,6 +119,7 @@ def quit():
     sys.exit(0)
     return "quit"
 
+p=None
 
 def not_exist_makedirs(path):
     if not os.path.exists(path):
@@ -143,5 +143,6 @@ if __name__ == '__main__':
     debug_file_handler.setFormatter(formatter)
     app.logger.addHandler(debug_file_handler)
 
+    logging.info("start")
     app.run(host="0.0.0.0", port=5000)
     app.logger.info("start")

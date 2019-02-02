@@ -15,7 +15,7 @@ class TestSay(unittest.TestCase):
     conn = None
 
     def setUp(self):
-        self.conn=self._initDb()
+        self.conn = self._initDb()
         self.app = popper.Popper()
         self.app.init(TEST_DB)
         self.app.init_log()
@@ -31,18 +31,23 @@ class TestSay(unittest.TestCase):
             p.communicate(data.encode())
         return sqlite3.connect(TEST_DB)
 
-    #################### </helper>
+    # </helper>
 
     def test_init(self):
         assert self.conn is not None
 
     def test_dequeue(self):
-        # test to decrease by 1
-        c = self.conn.cursor()
-        c.execute('select count(*) from entries')
-        data = self.app.dequeue()
-        self.assertEqual(0, len(data))
-        pass
+        mock_lib = MagicMock()
+        with patch('performer.Performer', return_value=mock_lib):
+            self.app.enqueue(title="TITLE", text="テキスト")
+            data = self.app.dequeue()
+            self.assertEqual(1, len(data))
+
+            # test to be empty
+            c = self.conn.cursor()
+            c.execute('select * from entries')
+            entries = c.fetchall()
+            assert len(entries) == 0
 
     def test_enqueue(self):
         data = self.app.enqueue(title="TITLE", text="テキスト")
@@ -65,15 +70,9 @@ class TestSay(unittest.TestCase):
                 "text": "my_text",
                 "voice": True,
                 "led": True
-                })
+            })
             assert mock_lib.led_message.called is True
             assert mock_lib.say.called is True
-
-
-            # perform.enqueue(title="TITLE", text="テキスト")
-
-    #     assert True is True
-#        assert mock_lib.enqueue.called is True
-        # perform.enqueue(title="TITLE", text="テキスト")
-        # perform.dequeue()
-        # self.assertIsNotNone(data)
+            mock_lib.say.assert_called()
+            mock_lib.say.assert_called_once()
+            assert mock_lib.say.call_count == 1

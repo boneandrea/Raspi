@@ -67,13 +67,15 @@ class Popper():
         for row in c.execute('select * from entries'):
             self.my_perform(row)
             c.execute('delete from entries where id=%s' % row["id"])
+            self.conn.commit()
 
         return entries
-    def enqueue(self, title, text):
+
+    def enqueue(self, title, text, led=1, voice=1):
         try:
             c = self.conn.cursor()
-            stmt = "insert into entries (title, text, created) values (?,?,?)"
-            c.execute(stmt, (title, text, datetime.datetime.now()))
+            stmt = "insert into entries (title, text, led, voice, created) values (?,?,?,?,?)"
+            c.execute(stmt, (title, text, led, voice, datetime.datetime.now()))
             self.conn.commit()
             elem = c.execute(
                 'select * from entries where ROWID = last_insert_rowid()')
@@ -102,7 +104,6 @@ class Popper():
     def main_loop(self):
         while True:
             self.dequeue()
-            print(".", end="")
             sys.stdout.flush()
             time.sleep(3)
 
@@ -115,7 +116,11 @@ if __name__ == '__main__':
     logging.info("start")
 
     text = "Hello"
-    p.my_perform({"text": text})
+    p.my_perform({
+        "text": "start",
+        "voice": True,
+        "led": True
+        })
 
 #    p.conn.set_trace_callback(mytrigger)
 
