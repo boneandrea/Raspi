@@ -49,10 +49,32 @@ class TestSay(unittest.TestCase):
             entries = c.fetchall()
             assert len(entries) == 0
 
-    def test_enqueue(self):
+    def test_enqueue0(self):
         data = self.app.enqueue(title="TITLE", text="テキスト")
         self.assertEqual("テキスト", data["text"])
         self.assertIsNotNone(data)
+
+        qdata = self.app.dequeue()[0]
+        assert qdata["led"] == 1
+        assert qdata["voice"] == 1
+
+    def test_enqueue1(self):
+        data = self.app.enqueue(title="TITLE", text="テキスト", led=False)
+        self.assertEqual("テキスト", data["text"])
+        self.assertIsNotNone(data)
+
+        qdata = self.app.dequeue()[0]
+        assert qdata["led"] == 0
+        assert qdata["voice"] == 1
+
+    def test_enqueue1(self):
+        data = self.app.enqueue(title="TITLE", text="テキスト", voice=False)
+        self.assertEqual("テキスト", data["text"])
+        self.assertIsNotNone(data)
+
+        qdata = self.app.dequeue()[0]
+        assert qdata["led"] == 1
+        assert qdata["voice"] == 0
 
     def test_mytrigger(self):
         self.assertTrue(type(self.app.mytrigger()) is list)

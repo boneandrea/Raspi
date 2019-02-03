@@ -59,21 +59,19 @@ def get_image():
 def get_news():
 
     try:
+        app.logger.info(request.form)
         if request.form["str"] != "":
-            str = request.form["str"]
-
-            app.logger.info(request.form)
-            p = Popper()
-            p.init("test.db")
-
-            nandate = request.form.get("system", None)
-            app.logger.info(nandate)
-            if nandate:
+            if request.form.get("system", None):
                 pass
             else:
                 p.enqueue("title", text="えっ　なんだって？", led=False, voice=True)
 
-            p.enqueue("title", text=str)
+            p.enqueue(
+                "title",
+                text=request.form["str"],
+                led=request.form.get("led", True),
+                voice=request.form.get("voice", True)
+            )
 
     except Exception as e:
         app.logger.info(e)
@@ -152,6 +150,10 @@ if __name__ == '__main__':
 
     debug_file_handler.setLevel(logging.INFO)
     debug_file_handler.setFormatter(formatter)
+
+    p = Popper()
+    p.init("test.db")
+
     app.logger.addHandler(debug_file_handler)
 
     app.run(host="0.0.0.0", port=5000)
