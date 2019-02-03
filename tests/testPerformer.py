@@ -17,12 +17,10 @@ class TestPerformer(unittest.TestCase):
         self.assertTrue(self.app.led_message({"text": "my_text"}))
 
         with self.assertRaises(KeyError):  # 例外のテスト
-            self.assertRaises(KeyError, self.app.led_message(
-                {"text_not_exist": "my_text"}))
+            self.app.led_message({"text_not_exist": "my_text"})
 
     def test_say(self):
         self.assertTrue(self.app.say({"text": "my_text"}))
 
         with self.assertRaises(KeyError):  # 例外のテスト
-            self.assertRaises(KeyError, self.app.say(
-                {"text_not_exist": "my_text"}))
+            self.app.say({"text_not_exist": "my_text"})

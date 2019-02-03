@@ -19,7 +19,7 @@ show_direct_command = "bin/GO"
 
 app = Flask(__name__)
 app.debug = True
-p=None
+
 
 @app.route('/')
 def hello_world():
@@ -65,6 +65,7 @@ def get_news():
         p = Popper()
         p.init_log()
         p.init("test.db")
+        p.enqueue("title", text="えっ　なんだって？", led=False, voice=True)
         p.enqueue("title", text=str)
 
     return jsonify({"result": True})
@@ -119,7 +120,6 @@ def quit():
     sys.exit(0)
     return "quit"
 
-p=None
 
 def not_exist_makedirs(path):
     if not os.path.exists(path):
@@ -128,7 +128,7 @@ def not_exist_makedirs(path):
 
 if __name__ == '__main__':
 
-    debug_log = os.path.join(app.root_path, './logs/debug.log')
+    debug_log = os.path.join(app.root_path, './logs/srv_debug.log')
     not_exist_makedirs(os.path.dirname(debug_log))
     formatter = logging.Formatter(
         '%(asctime)s %(levelname)s: %(message)s '
@@ -143,6 +143,5 @@ if __name__ == '__main__':
     debug_file_handler.setFormatter(formatter)
     app.logger.addHandler(debug_file_handler)
 
-    logging.info("start")
     app.run(host="0.0.0.0", port=5000)
     app.logger.info("start")

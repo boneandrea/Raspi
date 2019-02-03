@@ -88,10 +88,10 @@ class Popper():
     def my_perform(self, dict_row):
         p=performer.Performer()
 
-        if dict_row["voice"] == True:
+        if dict_row["led"] == True:
             p.led_message(dict_row)
 
-        if dict_row["led"] == True:
+        if dict_row["voice"] == True:
             p.say(dict_row)
 
         return True

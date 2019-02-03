@@ -63,7 +63,7 @@ class TestSay(unittest.TestCase):
             self.app.mytrigger()
             assert mock_lib.hello.called is True
 
-    def test_perform(self):
+    def test_perform0(self):
         mock_lib = MagicMock()
         with patch('performer.Performer', return_value=mock_lib):
             self.app.my_perform({
@@ -75,4 +75,27 @@ class TestSay(unittest.TestCase):
             assert mock_lib.say.called is True
             mock_lib.say.assert_called()
             mock_lib.say.assert_called_once()
+            mock_lib.led_message.assert_called_once()
             assert mock_lib.say.call_count == 1
+
+    def test_perform1(self):
+        mock_lib = MagicMock()
+        with patch('performer.Performer', return_value=mock_lib):
+            self.app.my_perform({
+                "text": "my_text",
+                "voice": True,
+                "led": False,
+            })
+            assert mock_lib.say.called is True
+            assert mock_lib.led_message.called is False
+
+    def test_perform2(self):
+        mock_lib = MagicMock()
+        with patch('performer.Performer', return_value=mock_lib):
+            self.app.my_perform({
+                "text": "my_text",
+                "voice": False,
+                "led": True,
+            })
+            assert mock_lib.say.called is False
+            assert mock_lib.led_message.called is True

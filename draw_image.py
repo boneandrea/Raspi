@@ -10,22 +10,6 @@ SPACE = ""
 BLACK = ImageColor.getrgb("#223300")
 HEIGHT = 32
 
-# def crop():
-#     filename = "out.png"
-
-#     try:
-#         i = Image.open(filename, "r")
-#         o = i.crop((0, 1, 97, 17))
-#         o.save("fe.png")
-
-#         k = ImageTk.PhotoImage(i)
-#         print("w/h={},{}".format(k.width(), k.height()))
-
-#     except Exception as e:
-#         print(e)
-#         pass
-
-
 """文字数から幅計算
 """
 
@@ -52,7 +36,7 @@ def pick_font():
     file = "bin/fontlist"
     with open(file) as f:
         fonts = f.readlines()
-        return ImageFont.truetype(random.choice(fonts).strip(), 32)
+        return ImageFont.truetype(random.choice(fonts).strip(), HEIGHT)
 
 
 def full_chars(charData):
@@ -62,15 +46,25 @@ def full_chars(charData):
         'RGB', (width, HEIGHT), random_color(10))
 
     draw = ImageDraw.Draw(text_canvas)
-    draw.text(
-        (0, 0),
-        charData["char"].strip(),
-        font=pick_font(),
-        fill=random_color(-10)
-    )
+
+    my_str=charData["char"].strip()
+    for index in range(0,len(my_str)):
+        put_one_char(index*32,0,my_str[index],text_canvas)
 
     # 半角に
     return text_canvas
+
+def put_one_char(x,y,one_char, canvas):
+
+    draw = ImageDraw.Draw(canvas)
+    draw.text(
+        (x,y),
+        one_char,
+        font=pick_font(),
+        fill=random_color(-120)
+    )
+
+    return canvas
 
 
 def half_chars(charData):
@@ -130,6 +124,8 @@ def create(msgArray=[],
         ppmfile = outputFile + ".ppm"
         with open(outputFile + ".ppm", "rb") as f:
             return f.read()
+
+        return True
 
     except Exception as e:
         raise e
