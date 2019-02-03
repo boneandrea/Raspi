@@ -66,6 +66,7 @@ class Popper():
         logger.info("{} records dequeued".format(len(entries)))
         for row in c.execute('select * from entries'):
             self.my_perform(row)
+            logger.info(row)
             c.execute('delete from entries where id=%s' % row["id"])
             self.conn.commit()
 
@@ -86,7 +87,7 @@ class Popper():
             raise e
 
     def my_perform(self, dict_row):
-        p=performer.Performer()
+        p = performer.Performer()
 
         if dict_row["led"] == True:
             p.led_message(dict_row)
@@ -97,7 +98,7 @@ class Popper():
         return True
 
     def mytrigger(self):
-        mocked=mock.MyMock()
+        mocked = mock.MyMock()
         mocked.hello()
         return self.dequeue()
 
@@ -120,7 +121,7 @@ if __name__ == '__main__':
         "text": "start",
         "voice": True,
         "led": True
-        })
+    })
 
 #    p.conn.set_trace_callback(mytrigger)
 

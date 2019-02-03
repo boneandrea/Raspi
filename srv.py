@@ -57,16 +57,27 @@ def get_image():
 
 @app.route('/news', methods=['POST'])
 def get_news():
-    if request.form["str"] != "":
-        str = request.form["str"]
 
-        app.logger.info(str)
-        logging.info("start")
-        p = Popper()
-        p.init_log()
-        p.init("test.db")
-        p.enqueue("title", text="えっ　なんだって？", led=False, voice=True)
-        p.enqueue("title", text=str)
+    try:
+        if request.form["str"] != "":
+            str = request.form["str"]
+
+            app.logger.info(request.form)
+            p = Popper()
+            p.init("test.db")
+
+            nandate = request.form.get("system", None)
+            app.logger.info(nandate)
+            if nandate:
+                pass
+            else:
+                p.enqueue("title", text="えっ　なんだって？", led=False, voice=True)
+
+            p.enqueue("title", text=str)
+
+    except Exception as e:
+        app.logger.info(e)
+        raise e
 
     return jsonify({"result": True})
 
