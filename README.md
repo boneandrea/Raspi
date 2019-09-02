@@ -24,3 +24,8 @@ https://github.com/hzeller/rpi-rgb-led-matrix
   - 文字ONOFF
   - 文字その他params
 
+
+# sqliteが死ぬ
+```
+sh DB_CRASH
+```

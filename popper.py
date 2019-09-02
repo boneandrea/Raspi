@@ -61,14 +61,20 @@ class Popper():
 
     def dequeue(self):
         c = self.conn.cursor()
+
+        # TODO: raise here ! catch !
         c.execute('select * from entries')
         entries = c.fetchall()
         logger.info("{} records dequeued".format(len(entries)))
         for row in c.execute('select * from entries'):
             self.my_perform(row)
             logger.info(row)
-            c.execute('delete from entries where id=%s' % row["id"])
-            self.conn.commit()
+            try:
+                c.execute('delete from entries where id=%s' % row["id"])
+                self.conn.commit()
+            except sqlite3.Error as e:
+                # sqlite3.OperationalError: database is locked
+                logger.info("エラー occurred:", e.args[0])
 
         return entries
 
@@ -89,10 +95,10 @@ class Popper():
     def my_perform(self, dict_row):
         p = performer.Performer()
 
-        if dict_row["led"] == True:
+        if dict_row["led"] == 1:
             p.led_message(dict_row)
 
-        if dict_row["voice"] == True:
+        if dict_row["voice"] == 1:
             p.say(dict_row)
 
         return True

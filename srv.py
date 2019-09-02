@@ -6,13 +6,15 @@ import subprocess
 import time
 import sys
 import pprint
+import syslog
 import os
-
 import logging  # log
 from logging.handlers import RotatingFileHandler  # log
-
 import draw_image
 from popper import Popper
+import json
+
+syslog.openlog('testprog',syslog.LOG_PID,syslog.LOG_LOCAL7)
 
 SHOW_COMMAND = "bin/show_news"
 show_direct_command = "bin/GO"
@@ -60,6 +62,7 @@ def get_news():
 
     try:
         app.logger.info(request.form)
+
         if request.form["str"] != "":
             if request.form.get("system", None):
                 pass
@@ -126,6 +129,8 @@ def quit():
     if func is None:
         raise RuntimeError('Not running with the Werkzeug Server')
     func()
+
+    syslog.closelog()
     sys.exit(0)
     return "quit"
 
