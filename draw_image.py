@@ -48,8 +48,8 @@ def full_chars(charData):
     draw = ImageDraw.Draw(text_canvas)
 
     my_str=charData["char"].strip()
-    for index in range(0,len(my_str)):
-        put_one_char(index*32,0,my_str[index],text_canvas)
+    #for index in range(0,len(my_str)):
+    put_one_char(0,0,my_str,text_canvas)
 
     # 半角に
     return text_canvas

@@ -39,7 +39,7 @@ class Popper():
         if self.DBNAME is None:
             self.DBNAME = dbname
 
-            self.conn = sqlite3.connect(self.DBNAME, check_same_thread=False)
+            self.conn = sqlite3.connect(self.DBNAME, check_same_thread=False, isolation_level=None)
             self.conn.row_factory = dict_factory
             #    conn.row_factory = sqlite3.Row
 
@@ -89,7 +89,7 @@ class Popper():
             return(elem.fetchone())
 
         except sqlite3.Error as e:
-            print("An error occurred:", e.args[0])
+            print("Failed to insert !!! error occurred:", e.args[0])
             raise e
 
     def my_perform(self, dict_row):
