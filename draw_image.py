@@ -120,7 +120,6 @@ def create(msgArray=[],
     # 保存
     try:
         canvas.save(outputFile + ".ppm", 'PPM', quality=100, optimize=True)
-        canvas.save(outputFile + ".jpg", 'JPEG', quality=100, optimize=True)
         ppmfile = outputFile + ".ppm"
         with open(outputFile + ".ppm", "rb") as f:
             return f.read()
