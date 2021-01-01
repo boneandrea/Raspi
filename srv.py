@@ -3,6 +3,7 @@ from flask import Flask, request, render_template, jsonify, make_response
 import urllib.request
 import urllib.parse
 import subprocess
+import datetime
 import time
 import sys
 import pprint
@@ -14,7 +15,7 @@ import draw_image
 from popper import Popper
 import json
 
-syslog.openlog('testprog',syslog.LOG_PID,syslog.LOG_LOCAL7)
+syslog.openlog('testprog', syslog.LOG_PID, syslog.LOG_LOCAL7)
 
 SHOW_COMMAND = "bin/show_news"
 show_direct_command = "bin/GO"
@@ -50,7 +51,7 @@ def get_image():
 
     res = subprocess.call(["sudo", "killall", "demo"])
     res = subprocess.call([show_direct_command,
-                           os.path.join(UPLOAD_DIR, "data.ppm")])
+        os.path.join(UPLOAD_DIR, "data.ppm")])
 
     app.logger.info(res)
 
@@ -69,12 +70,17 @@ def get_news():
             else:
                 p.enqueue("title", text="えっ　なんだって？", led=False, voice=True)
 
-            p.enqueue(
-                "title",
-                text=request.form["str"],
-                led=request.form.get("led", True),
-                voice=request.form.get("voice", True)
-            )
+            # 夜は握りつぶす
+            voice = request.form.get("voice", True)
+            if datetime.datetime.now().hour >= 22 and datetime.datetime.now().minute >= 30:
+                app.logger.info("# 夜は黙る")
+            else:
+                p.enqueue(
+                        "title",
+                        text=request.form["str"],
+                        led=request.form.get("led", True),
+                        voice=voice
+                        )
 
     except Exception as e:
         app.logger.info(e)
@@ -90,16 +96,16 @@ def draw(message):
             "size": "full",
             "color": "#55aaff",
             "background": "#004411"
-        }],
+            }],
             outputFile="bin/img/news",
             height=32
-        )
+            )
         return True
     except Exception as e:
         raise e
-        return False
+    return False
 
-        pass
+pass
 
 
 def post_voice(voice_data):
@@ -145,13 +151,13 @@ if __name__ == '__main__':
     debug_log = os.path.join(app.root_path, './logs/srv_debug.log')
     not_exist_makedirs(os.path.dirname(debug_log))
     formatter = logging.Formatter(
-        '%(asctime)s %(levelname)s: %(message)s '
-        '[in %(pathname)s:%(lineno)d]'
-    )
+            '%(asctime)s %(levelname)s: %(message)s '
+            '[in %(pathname)s:%(lineno)d]'
+            )
 
     debug_file_handler = RotatingFileHandler(
-        debug_log, maxBytes=100000, backupCount=10
-    )
+            debug_log, maxBytes=100000, backupCount=10
+            )
 
     debug_file_handler.setLevel(logging.INFO)
     debug_file_handler.setFormatter(formatter)

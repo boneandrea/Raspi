@@ -112,7 +112,7 @@ class Popper():
         while True:
             self.dequeue()
             sys.stdout.flush()
-            time.sleep(3)
+            time.sleep(5)
 
 
 if __name__ == '__main__':
