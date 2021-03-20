@@ -1,7 +1,7 @@
 Click==7.0
 Flask==1.0.2
 itsdangerous==0.24
-Jinja2==2.10
+Jinja2==2.11.3
 jsonify==0.5
 MarkupSafe==1.0
 Pillow==5.4.1
