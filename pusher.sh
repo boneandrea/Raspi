@@ -1,6 +1,7 @@
 #!/bin/bash
 
 export LANG=ja_JP.UTF-8
+export FLASK_ENV=development
 
 cd `dirname $0`
 . ./myenv/bin/activate
